@@ -12,9 +12,12 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 /**
- * The VM is configured to automatically run this class, and to call the functions corresponding to
- * each mode, as described in the TimedRobot documentation. If you change the name of this class or
- * the package after creating this project, you must also update the build.gradle file in the
+ * The VM is configured to automatically run this class, and to call the
+ * functions corresponding to
+ * each mode, as described in the TimedRobot documentation. If you change the
+ * name of this class or
+ * the package after creating this project, you must also update the
+ * build.gradle file in the
  * project.
  */
 public class Robot extends TimedRobot {
@@ -23,20 +26,20 @@ public class Robot extends TimedRobot {
   private TimeOfFlight distSensor = new TimeOfFlight(10);
   private double DSdepth = 9.97;
   private double DSdetectdistance = 23;
-  
-  public boolean hasGamePiece() {
-    //return false;
-    return getGamePieceDistanceIn() < DSdetectdistance;
-}
-public double getGamePieceDistanceIn() {
-  return Units.metersToInches((distSensor.getRange() - DSdepth ) / 1000 /* Convert mm to m */);
-}
 
+  public boolean hasGamePiece() {
+    // return false;
+    return getGamePieceDistanceIn() < DSdetectdistance;
+  }
+
+  public double getGamePieceDistanceIn() {
+    return Units.metersToInches((distSensor.getRange() - DSdepth) / 1000 /* Convert mm to m */);
+  }
 
   @Override
   public void robotInit() {
     m_robotContainer = new RobotContainer();
-      
+
   }
 
   @Override
@@ -53,12 +56,12 @@ public double getGamePieceDistanceIn() {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
 
-
     }
   }
 
   @Override
-  public void autonomousPeriodic() {}
+  public void autonomousPeriodic() {
+  }
 
   @Override
   public void teleopInit() {
@@ -68,13 +71,16 @@ public double getGamePieceDistanceIn() {
   }
 
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+  }
 
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+  }
 
   @Override
-  public void disabledPeriodic() {}
+  public void disabledPeriodic() {
+  }
 
   @Override
   public void testInit() {
@@ -82,11 +88,14 @@ public double getGamePieceDistanceIn() {
   }
 
   @Override
-  public void testPeriodic() {}
+  public void testPeriodic() {
+  }
 
   @Override
-  public void simulationInit() {}
+  public void simulationInit() {
+  }
 
   @Override
-  public void simulationPeriodic() {}
+  public void simulationPeriodic() {
+  }
 }
