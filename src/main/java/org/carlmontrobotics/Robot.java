@@ -26,6 +26,21 @@ public class Robot extends TimedRobot {
   private TimeOfFlight distSensor = new TimeOfFlight(10);
   private double DSdepth = 9.97;
   private double DSdetectdistance = 23;
+  
+
+
+  //feedforard stuff
+
+
+
+  // Calculates the feedforward for a velocity of 10 units/second and an 
+  // acceleration of 20 units/second^2
+  // Units are determined by the units of the gains passed in at construction.
+ 
+
+  // drives the motor to the desired velocity and acceleration calculated 
+  // from the feedforward controller
+
 
   public boolean hasGamePiece() {
     // return false;

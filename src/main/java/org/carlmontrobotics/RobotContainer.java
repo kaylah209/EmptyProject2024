@@ -9,10 +9,14 @@ package org.carlmontrobotics;
 // import org.carlmontrobotics.commands.*;
 import static org.carlmontrobotics.Constants.OI;
 
+import org.carlmontrobotics.Constants.OI;
+import org.carlmontrobotics.subsystems.Shooter;
+
 //controllers
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Axis;
-
+import edu.wpi.first.wpilibj.XboxController.Button;
 //commands
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -24,6 +28,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
 public class RobotContainer {
 
@@ -48,7 +53,17 @@ public class RobotContainer {
     //   () -> driverController.getRawButton(OI.Driver.slowDriveButton)
     // ));
   }
-  private void setBindingsDriver() {}
+  private void setBindingsDriver() {
+      XboxController controller = new XboxController(1);
+      Shooter shooter = new Shooter();
+      
+
+      new JoystickButton(controller, Button.kY.value).whileTrue(
+        shooter.sysIdQuasistatic(SysIdRoutine.Direction.kForward)
+      );
+      
+      
+  }
   private void setBindingsManipulator() {}
 
   public Command getAutonomousCommand() {
