@@ -11,23 +11,33 @@ import edu.wpi.first.units.Measure;
 import edu.wpi.first.units.MutableMeasure;
 import edu.wpi.first.units.Voltage;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.sysid.SysIdRoutineLog;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
 public class Shooter extends SubsystemBase {
-    CANSparkMax motor = MotorControllerFactory.createSparkMax(0, MotorConfig.NEO_550);
+    public static final double[] pidVals = new double[] {/*/kP/*/ 0.1,/*/kI/*/ 0.0,/*/kD/*/ 0.1 };
+    public static final double[] FeedforwardVals = new double[] { /*/kS/*/0.1, /*/kG/*/0.1, /*/kV/*/0.1, /*/kA/*/0.1 };
+
+    CANSparkMax shootingMotor = MotorControllerFactory.createSparkMax(0, MotorConfig.NEO_550);
 
     private final MutableMeasure<Voltage> voltage = mutable(Volts.of(0));
 
     public void driveMotor(Measure<Voltage> volts) {
-        motor.setVoltage(volts.in(Volts));
+        shootingMotor.setVoltage(volts.in(Volts));
+    }
+
+    public Voltage smartDashboard(){
+        return Volts;
+        SmartDashboard.putData("motor voltage", Volts);
+
     }
 
     public void logMotor(SysIdRoutineLog log) {
             log.motor("shooter-motor").voltage(voltage.mut_replace(
-            motor.get() * RobotController.getBatteryVoltage(), 
+            shootingMotor.get() * RobotController.getBatteryVoltage(), 
             Volts
         ));
     }
