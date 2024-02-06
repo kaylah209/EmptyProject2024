@@ -67,16 +67,17 @@ public class RobotContainer {
       new JoystickButton(controller, Button.kB.value).whileTrue(
         shooter.sysIdQuasistatic(SysIdRoutine.Direction.kReverse)
       );
-      /*new JoystickButton(controller, Button.kX.value).whileTrue(
+      new JoystickButton(controller, Button.kX.value).whileTrue(
         shooter.sysIdQuasistatic(SysIdRoutine.Direction.kForward)
-      );*/
+      );
 
-      //^idk the buttons on the controller so for now theses two just share the same button
+      
 
-      new JoystickButton(controller,Button.kX.value).whileTrue(
+      /*new JoystickButton(controller, Button.kX.value).whileTrue(
         shooter.shoot()
       );
       */
+      
       //^^ i didn't know the other buttons, but once the sysid test is done we use this 
       
       

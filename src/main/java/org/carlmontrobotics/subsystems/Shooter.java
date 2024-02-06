@@ -1,5 +1,7 @@
 package org.carlmontrobotics.subsystems;
 
+import org.carlmontrobotics.Robot;
+import org.carlmontrobotics.RobotContainer;
 import org.carlmontrobotics.lib199.MotorConfig;
 import org.carlmontrobotics.lib199.MotorControllerFactory;
 import static edu.wpi.first.units.MutableMeasure.mutable;
@@ -22,16 +24,19 @@ public class Shooter extends SubsystemBase {
 
     public static final double[] pidVals = new double[] {/*/kP/*/ 0.1,/*/kI/*/ 0.0,/*/kD/*/ 0.1 };
     public static final double[] FeedforwardVals = new double[] { /*/kS/*/0.1, /*/kG/*/0.1, /*/kV/*/0.1, /*/kA/*/0.1 };
+    
 
 
     CANSparkMax motor = MotorControllerFactory.createSparkMax(0, MotorConfig.NEO_550);
     SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(0, 0, 0);
     //^^put in after test
-    public double outtakeRPM = 0;
-    SmartDashboard
-    SmartDashboard.putNumber("OuttakeRPM",outtakeRPM);
-   
-    double volts = feedforward.calculate(outtakeRPM, 0);
+    
+    
+    double rpm = SmartDashboard.getNumber("OuttakeRPM",Robot.outtakeRPM);
+    double volts = feedforward.calculate(rpm, 0);
+
+    
+    
     
 
 
@@ -40,6 +45,7 @@ public class Shooter extends SubsystemBase {
     public void driveMotor(Measure<Voltage> volts) {
 
         motor.setVoltage(volts.in(Volts));
+        
     }
 
 
