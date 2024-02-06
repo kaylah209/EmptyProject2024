@@ -7,6 +7,7 @@ import static edu.wpi.first.units.Units.Volts;
 
 import com.revrobotics.CANSparkMax;
 
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.units.Measure;
 import edu.wpi.first.units.MutableMeasure;
 import edu.wpi.first.units.Voltage;
@@ -18,26 +19,34 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
 public class Shooter extends SubsystemBase {
+
     public static final double[] pidVals = new double[] {/*/kP/*/ 0.1,/*/kI/*/ 0.0,/*/kD/*/ 0.1 };
     public static final double[] FeedforwardVals = new double[] { /*/kS/*/0.1, /*/kG/*/0.1, /*/kV/*/0.1, /*/kA/*/0.1 };
 
-    CANSparkMax shootingMotor = MotorControllerFactory.createSparkMax(0, MotorConfig.NEO_550);
+
+    CANSparkMax motor = MotorControllerFactory.createSparkMax(0, MotorConfig.NEO_550);
+    SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(0, 0, 0);
+    //^^put in after test
+    public double outtakeRPM = 0;
+    SmartDashboard
+    SmartDashboard.putNumber("OuttakeRPM",outtakeRPM);
+   
+    double volts = feedforward.calculate(outtakeRPM, 0);
+    
+
 
     private final MutableMeasure<Voltage> voltage = mutable(Volts.of(0));
 
     public void driveMotor(Measure<Voltage> volts) {
-        shootingMotor.setVoltage(volts.in(Volts));
+
+        motor.setVoltage(volts.in(Volts));
     }
 
-    public Voltage smartDashboard(){
-        return Volts;
-        SmartDashboard.putData("motor voltage", Volts);
 
-    }
 
     public void logMotor(SysIdRoutineLog log) {
             log.motor("shooter-motor").voltage(voltage.mut_replace(
-            shootingMotor.get() * RobotController.getBatteryVoltage(), 
+            motor.get() * RobotController.getBatteryVoltage(), 
             Volts
         ));
     }
@@ -56,6 +65,9 @@ public class Shooter extends SubsystemBase {
 
     public Command sysIdDynamic(SysIdRoutine.Direction direction) {
         return routine.dynamic(direction);
+    }
+    public void shoot(){
+        motor.setVoltage(volts);
     }
 
 

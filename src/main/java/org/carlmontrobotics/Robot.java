@@ -20,12 +20,14 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
  * build.gradle file in the
  * project.
  */
+import org.carlmontrobotics.subsystems.Shooter;
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
   private RobotContainer m_robotContainer;
   private TimeOfFlight distSensor = new TimeOfFlight(10);
   private double DSdepth = 9.97;
   private double DSdetectdistance = 23;
+  Shooter shooter = new Shooter();
   
 
 
@@ -62,6 +64,8 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().run();
     SmartDashboard.putNumber("Detect Distance", getGamePieceDistanceIn());
     SmartDashboard.putBoolean("Has GUM", hasGamePiece());
+    
+    
   }
 
   @Override
