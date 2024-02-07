@@ -25,19 +25,25 @@ public class Shooter extends SubsystemBase {
     public static final double[] pidVals = new double[] {/*/kP/*/ 0.1,/*/kI/*/ 0.0,/*/kD/*/ 0.1 };
     public static final double[] FeedforwardVals = new double[] { /*/kS/*/0.1, /*/kG/*/0.1, /*/kV/*/0.1, /*/kA/*/0.1 };
     
-
+    public static double outtakeRPM = 0;
 
     CANSparkMax motor = MotorControllerFactory.createSparkMax(0, MotorConfig.NEO_550);
     SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(0, 0, 0);
     //^^put in after test
     
     
-    double rpm = SmartDashboard.getNumber("OuttakeRPM",Robot.outtakeRPM);
-    double volts = feedforward.calculate(rpm, 0);
+    
+    private double volts = 0;
+    
+    
+    public void periodic(){
+        SmartDashboard.putNumber("OuttakeRPM", outtakeRPM);
+        double rpm = SmartDashboard.getNumber("OuttakeRPM",outtakeRPM);
+        volts = feedforward.calculate(rpm, 0);
+    }
 
     
-    
-    
+
 
 
     private final MutableMeasure<Voltage> voltage = mutable(Volts.of(0));

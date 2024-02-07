@@ -9,6 +9,8 @@ package org.carlmontrobotics;
 // import org.carlmontrobotics.commands.*;
 import static org.carlmontrobotics.Constants.OI;
 
+import java.time.Instant;
+
 import org.carlmontrobotics.Constants.OI;
 import org.carlmontrobotics.subsystems.Shooter;
 
@@ -67,16 +69,20 @@ public class RobotContainer {
       new JoystickButton(controller, Button.kB.value).whileTrue(
         shooter.sysIdQuasistatic(SysIdRoutine.Direction.kReverse)
       );
-      new JoystickButton(controller, Button.kX.value).whileTrue(
+     /*  new JoystickButton(controller, Button.kX.value).whileTrue(
         shooter.sysIdQuasistatic(SysIdRoutine.Direction.kForward)
       );
-
+*/
       
 
-      /*new JoystickButton(controller, Button.kX.value).whileTrue(
-        shooter.shoot()
+      new JoystickButton(controller, Button.kX.value).whileTrue(
+        new InstantCommand(
+          () -> {
+            shooter.shoot();
+          }
+          )
       );
-      */
+      
       
       //^^ i didn't know the other buttons, but once the sysid test is done we use this 
       

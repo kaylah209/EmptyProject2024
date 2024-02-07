@@ -28,7 +28,7 @@ public class Robot extends TimedRobot {
   private double DSdepth = 9.97;
   private double DSdetectdistance = 23;
   Shooter shooter = new Shooter();
-  public static double outtakeRPM = 0;
+ 
   
 
 
@@ -68,7 +68,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putBoolean("Has GUM", hasGamePiece());
 
     
-    SmartDashboard.putNumber("OuttakeRPM", outtakeRPM);
+    
     
    
     
