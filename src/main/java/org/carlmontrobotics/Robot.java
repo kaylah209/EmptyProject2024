@@ -4,8 +4,14 @@
 
 package org.carlmontrobotics;
 
-import com.playingwithfusion.TimeOfFlight;
-import edu.wpi.first.math.util.Units;
+import org.carlmontrobotics.lib199.MotorConfig;
+import org.carlmontrobotics.lib199.MotorControllerFactory;
+
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.ControlType;
+import com.revrobotics.SparkPIDController;
+
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -23,45 +29,30 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
   private RobotContainer m_robotContainer;
-  private TimeOfFlight distSensor = new TimeOfFlight(10);
-  private double DSdepth = 9.97;
-  private double DSdetectdistance = 23;
-  
-
-
-  //feedforard stuff
-
-
-
-  // Calculates the feedforward for a velocity of 10 units/second and an 
-  // acceleration of 20 units/second^2
-  // Units are determined by the units of the gains passed in at construction.
- 
-
-  // drives the motor to the desired velocity and acceleration calculated 
-  // from the feedforward controller
-
-
-  public boolean hasGamePiece() {
-    // return false;
-    return getGamePieceDistanceIn() < DSdetectdistance;
-  }
-
-  public double getGamePieceDistanceIn() {
-    return Units.metersToInches((distSensor.getRange() - DSdepth) / 1000 /* Convert mm to m */);
-  }
-
+  /*
+   
+  private CANSparkMax motor = MotorControllerFactory.createSparkMax(1, MotorConfig.NEO_550);
+  private SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(.1, 985.6);
+  private SparkPIDController pidController = motor.getPIDController();
+   */
   @Override
   public void robotInit() {
+    /*
+    
     m_robotContainer = new RobotContainer();
+    SmartDashboard.putNumber("Motor RPM", 0);
+    */
 
   }
 
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
-    SmartDashboard.putNumber("Detect Distance", getGamePieceDistanceIn());
-    SmartDashboard.putBoolean("Has GUM", hasGamePiece());
+    /*
+     
+    pidController.setReference(0.0, ControlType.kVelocity, 0);
+    motor.setVoltage(feedforward.calculate(SmartDashboard.getNumber("Motor RPM", 0)));
+     */
   }
 
   @Override

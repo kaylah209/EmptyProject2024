@@ -34,11 +34,15 @@ public class RobotContainer {
 
   //1. using GenericHID allows us to use different kinds of controllers
   //2. Use absolute paths from constants to reduce confusion
+  Shooter shooter = new Shooter();
   public final GenericHID driverController = new GenericHID(OI.Driver.port);
   public final GenericHID manipulatorController = new GenericHID(OI.Manipulator.port);
 
   public RobotContainer() {
-
+    new JoystickButton(driverController, Button.kY.value).whileTrue(shooter.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+    new JoystickButton(driverController, Button.kA.value).whileTrue(shooter.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+    new JoystickButton(driverController, Button.kB.value).whileTrue(shooter.sysIdDynamic(SysIdRoutine.Direction.kForward));
+    new JoystickButton(driverController, Button.kX.value).whileTrue(shooter.sysIdDynamic(SysIdRoutine.Direction.kReverse));
     setDefaultCommands();
     setBindingsDriver();
     setBindingsManipulator();
@@ -54,14 +58,6 @@ public class RobotContainer {
     // ));
   }
   private void setBindingsDriver() {
-      XboxController controller = new XboxController(1);
-      Shooter shooter = new Shooter();
-      
-
-      new JoystickButton(controller, Button.kY.value).whileTrue(
-        shooter.sysIdQuasistatic(SysIdRoutine.Direction.kForward)
-      );
-      
       
   }
   private void setBindingsManipulator() {}
