@@ -26,6 +26,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
  * build.gradle file in the
  * project.
  */
+import org.carlmontrobotics.subsystems.Shooter;
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
   private RobotContainer m_robotContainer;
@@ -37,15 +38,14 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
-    /*
+    
     
     m_robotContainer = new RobotContainer();
     SmartDashboard.putNumber("Motor RPM", 0);
-    */
-
-  }
+      }
 
   @Override
+  
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
     /*

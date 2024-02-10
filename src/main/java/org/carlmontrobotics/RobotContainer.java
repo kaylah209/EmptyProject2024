@@ -58,6 +58,32 @@ public class RobotContainer {
     // ));
   }
   private void setBindingsDriver() {
+      XboxController controller = new XboxController(1);
+      Shooter shooter = new Shooter();
+      
+
+      new JoystickButton(controller, Button.kY.value).whileTrue(
+        shooter.sysIdDynamic(SysIdRoutine.Direction.kForward)
+      );
+      new JoystickButton(controller, Button.kA.value).whileTrue(
+        shooter.sysIdDynamic(SysIdRoutine.Direction.kReverse)
+      );
+      new JoystickButton(controller, Button.kB.value).whileTrue(
+        shooter.sysIdQuasistatic(SysIdRoutine.Direction.kReverse)
+      );
+      new JoystickButton(controller, Button.kX.value).whileTrue(
+        shooter.sysIdQuasistatic(SysIdRoutine.Direction.kForward)
+      );
+
+      
+
+      /*new JoystickButton(controller, Button.kX.value).whileTrue(
+        shooter.shoot()
+      );
+      */
+      
+      //^^ i didn't know the other buttons, but once the sysid test is done we use this 
+      
       
   }
   private void setBindingsManipulator() {}
