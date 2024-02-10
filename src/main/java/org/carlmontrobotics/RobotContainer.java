@@ -43,10 +43,12 @@ public class RobotContainer {
     new JoystickButton(driverController, Button.kA.value).whileTrue(shooter.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
     new JoystickButton(driverController, Button.kB.value).whileTrue(shooter.sysIdDynamic(SysIdRoutine.Direction.kForward));
     new JoystickButton(driverController, Button.kX.value).whileTrue(shooter.sysIdDynamic(SysIdRoutine.Direction.kReverse));
-    setDefaultCommands();
-    setBindingsDriver();
+    //new JoystickButton(driverController, 4).onTrue(new InstantCommand( ()-> System.err.println("FUCKING WORK")));
+    setDefaultCommands(); 
+    //setBindingsDriver();
     setBindingsManipulator();
   }
+
 
   private void setDefaultCommands() {
     // drivetrain.setDefaultCommand(new TeleopDrive(
@@ -58,24 +60,24 @@ public class RobotContainer {
     // ));
   }
   private void setBindingsDriver() {
-      XboxController controller = new XboxController(1);
-      Shooter shooter = new Shooter();
+      //XboxController controller = new XboxController(1);
+      //Shooter shooter = new Shooter();
       
-
-      new JoystickButton(controller, Button.kY.value).whileTrue(
+      /* 
+      new JoystickButton(manipulatorController, Button.kY.value).whileTrue(
         shooter.sysIdDynamic(SysIdRoutine.Direction.kForward)
       );
-      new JoystickButton(controller, Button.kA.value).whileTrue(
+      new JoystickButton(manipulatorController, Button.kA.value).whileTrue(
         shooter.sysIdDynamic(SysIdRoutine.Direction.kReverse)
       );
-      new JoystickButton(controller, Button.kB.value).whileTrue(
+      new JoystickButton(manipulatorController, Button.kB.value).whileTrue(
         shooter.sysIdQuasistatic(SysIdRoutine.Direction.kReverse)
       );
-      new JoystickButton(controller, Button.kX.value).whileTrue(
+      new JoystickButton(manipulatorController, Button.kX.value).whileTrue(
         shooter.sysIdQuasistatic(SysIdRoutine.Direction.kForward)
       );
 
-      
+      */
 
       /*new JoystickButton(controller, Button.kX.value).whileTrue(
         shooter.shoot()
