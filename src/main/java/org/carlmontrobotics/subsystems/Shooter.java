@@ -10,8 +10,12 @@ import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.RPM;
 import static edu.wpi.first.units.Units.Volts;
 
+import com.revrobotics.CANSparkBase;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.SparkPIDController;
+import com.revrobotics.CANSparkBase.ControlType;
 
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.Distance;
 import edu.wpi.first.units.Measure;
@@ -27,18 +31,31 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
 public class Shooter extends SubsystemBase {
     CANSparkMax motor = MotorControllerFactory.createSparkMax(1, MotorConfig.NEO_550);
+    SparkPIDController pid = motor.getPIDController();
 
     private final MutableMeasure<Voltage> voltage = mutable(Volts.of(0));
     private final MutableMeasure<Velocity<Distance>> velocity = mutable(MetersPerSecond.of(0));
     private final MutableMeasure<Distance> distance = mutable(Meters.of(0));
+    private SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(0, 0, 0);
+
 
     public Shooter() {
-        motor.getEncoder().setPositionConversionFactor(2 * Math.PI * 2);
+        pid.setP(/*get from sysid */);
+        pid.setD(/*get from sysid */);
+        
+        SmartDashboard.putNumber("Target RPM", 0);
+
+        motor.getEncoder().setPositionConversionFactor(2 * Math.PI * 2); //This will be different since the wheel diamters will not be the same. THIS IS FOR DISTANCE
     }
     public void driveMotor(Measure<Voltage> volts) {
 
         motor.setVoltage(volts.in(Volts));
 
+    }
+
+    public void periodic() {
+        double targetRPM = SmartDashboard.getNumber("Target RPM", 0);
+        pid.setReference(targetRPM, CANSparkBase.ControlType.kVelocity, 0, feedforward.calculate(0, 0));
     }
 
     public void logMotor(SysIdRoutineLog log) {
