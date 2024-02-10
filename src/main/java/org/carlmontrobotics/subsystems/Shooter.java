@@ -41,6 +41,7 @@ public class Shooter extends SubsystemBase {
         motor.getEncoder().setPositionConversionFactor(2 * Math.PI * 2);
         pidController.setP(SHOOTER.kP);
         pidController.setD(SHOOTER.kD);
+
         SmartDashboard.putNumber("Shooter RPM", 0);
     }
     public void driveMotor(Measure<Voltage> volts) {
@@ -75,5 +76,6 @@ public class Shooter extends SubsystemBase {
     public void periodic() {
         double targetRPM = SmartDashboard.getNumber("Shooter RPM", 0);
         pidController.setReference(targetRPM, CANSparkBase.ControlType.kVelocity,0,ff.calculate(targetRPM));
+        motor.setVoltage(pidController.getFF() + pidController.getP() + pidController.getD());
     }
 }
