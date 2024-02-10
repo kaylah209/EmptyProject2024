@@ -30,7 +30,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
 public class Shooter extends SubsystemBase {
-    CANSparkMax motor = MotorControllerFactory.createSparkMax(1, MotorConfig.NEO_550);
+    CANSparkMax motor = MotorControllerFactory.createSparkMax(9, MotorConfig.NEO_550);
     SparkPIDController pid = motor.getPIDController();
 
     private final MutableMeasure<Voltage> voltage = mutable(Volts.of(0));
@@ -40,8 +40,8 @@ public class Shooter extends SubsystemBase {
 
 
     public Shooter() {
-        pid.setP(/*get from sysid */);
-        pid.setD(/*get from sysid */);
+       // pid.setP(/*get from sysid */);
+       // pid.setD(/*get from sysid */);
         
         SmartDashboard.putNumber("Target RPM", 0);
 
