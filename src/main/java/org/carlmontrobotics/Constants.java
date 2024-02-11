@@ -8,9 +8,9 @@ public final class Constants {
         public static final double kP = 0;
         public static final double kI = 0;
         public static final double kD = 0;
-        public static final double kS = 0.46665;
-        public static final double kV = 0.0489;
-        public static final double kA = 0.025;
+        public static final double kS = 0.29753;
+        public static final double kV = 0.077913;
+        public static final double kA = 0.05289;
 
     }
     public static final class OI {

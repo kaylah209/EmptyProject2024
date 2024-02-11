@@ -41,7 +41,6 @@ public class Robot extends TimedRobot {
     
     
     m_robotContainer = new RobotContainer();
-    SmartDashboard.putNumber("Motor RPM", 0);
       }
 
   @Override
