@@ -54,7 +54,6 @@ public class Shooter extends SubsystemBase {
         SmartDashboard.putNumber("kI", kP);
         // SmartDashboard.putNumber("kIZone", kIZone);
         SmartDashboard.putNumber("kD", kD);
-        SmartDashboard.putBoolean("Use FF", true);
         SmartDashboard.putNumber("Feedforward", 0);
         // SmartDashboard.putNumber("plswork", 0);
         // THIS LINE BELOW DOESN'T WORK
@@ -98,7 +97,6 @@ public class Shooter extends SubsystemBase {
         double targetRPS = SmartDashboard.getNumber("Shooter RPS", 0);
         kP = SmartDashboard.getNumber("kP", kP);
         kD = SmartDashboard.getNumber("kD", kD);
-        //kIZone = SmartDashboard.getNumber("kIZone", kIZone);
         kI = SmartDashboard.getNumber("kI", kI);
 
         if (pidController.getP() != kP) {
@@ -110,21 +108,13 @@ public class Shooter extends SubsystemBase {
         if (pidController.getI() != kI) {
             pidController.setI(kI);
         }
-        // if (pidController.getIZone() != kIZone) {
-        //     pidController.setIZone(kIZone);
-        // }
-        // motor.setVoltage(SmartDashboard.getNumber("plswork", 0));
 
         SmartDashboard.putNumber("Shooter current RPS", encoder.getVelocity() / 60);
         double feed = ff.calculate(targetRPS);
+        SmartDashboard.putNumber("Feedforward", feed);
 
-        if (SmartDashboard.getBoolean("Use FF", true)) {
-            feed = SmartDashboard.getNumber("Feedforward", feed);
-        } else {
-            SmartDashboard.putNumber("Feedforward", feed);
-        }
-        SmartDashboard.putNumber("Error", motor.getBusVoltage() * motor.getAppliedOutput() - feed);
-        SmartDashboard.putNumber("Motor Voltage", motor.getBusVoltage() * motor.getAppliedOutput());
+        //SmartDashboard.putNumber("Error", motor.getBusVoltage() * motor.getAppliedOutput() - feed);
+        //SmartDashboard.putNumber("Motor Voltage", motor.getBusVoltage() * motor.getAppliedOutput());
 
         // motor.setVoltage(feed);
         pidController.setReference(targetRPS * 60, CANSparkBase.ControlType.kVelocity, 0, feed);
