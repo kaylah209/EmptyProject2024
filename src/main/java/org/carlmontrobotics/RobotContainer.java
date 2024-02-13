@@ -10,7 +10,7 @@ package org.carlmontrobotics;
 import static org.carlmontrobotics.Constants.OI;
 
 import org.carlmontrobotics.Constants.OI;
-import org.carlmontrobotics.subsystems.Shooter;
+import org.carlmontrobotics.subsystems.Intake;
 
 //controllers
 import edu.wpi.first.wpilibj.GenericHID;
@@ -34,15 +34,15 @@ public class RobotContainer {
 
   //1. using GenericHID allows us to use different kinds of controllers
   //2. Use absolute paths from constants to reduce confusion
-  Shooter shooter = new Shooter();
+  Intake Intake = new Intake();
   public final GenericHID driverController = new GenericHID(OI.Driver.port);
   public final GenericHID manipulatorController = new GenericHID(OI.Manipulator.port);
 
   public RobotContainer() {
-    new JoystickButton(driverController, Button.kY.value).whileTrue(shooter.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
-    new JoystickButton(driverController, Button.kA.value).whileTrue(shooter.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
-    new JoystickButton(driverController, Button.kB.value).whileTrue(shooter.sysIdDynamic(SysIdRoutine.Direction.kForward));
-    new JoystickButton(driverController, Button.kX.value).whileTrue(shooter.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+    new JoystickButton(driverController, Button.kY.value).whileTrue(Intake.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+    new JoystickButton(driverController, Button.kA.value).whileTrue(Intake.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+    new JoystickButton(driverController, Button.kB.value).whileTrue(Intake.sysIdDynamic(SysIdRoutine.Direction.kForward));
+    new JoystickButton(driverController, Button.kX.value).whileTrue(Intake.sysIdDynamic(SysIdRoutine.Direction.kReverse));
     //new JoystickButton(driverController, 4).onTrue(new InstantCommand( ()-> System.err.println("FUCKING WORK")));
     setDefaultCommands(); 
     //setBindingsDriver();
@@ -61,26 +61,26 @@ public class RobotContainer {
   }
   private void setBindingsDriver() {
       //XboxController controller = new XboxController(1);
-      //Shooter shooter = new Shooter();
+      //Shooter Intake = new Shooter();
       
       /* 
       new JoystickButton(manipulatorController, Button.kY.value).whileTrue(
-        shooter.sysIdDynamic(SysIdRoutine.Direction.kForward)
+        Intake.sysIdDynamic(SysIdRoutine.Direction.kForward)
       );
       new JoystickButton(manipulatorController, Button.kA.value).whileTrue(
-        shooter.sysIdDynamic(SysIdRoutine.Direction.kReverse)
+        Intake.sysIdDynamic(SysIdRoutine.Direction.kReverse)
       );
       new JoystickButton(manipulatorController, Button.kB.value).whileTrue(
-        shooter.sysIdQuasistatic(SysIdRoutine.Direction.kReverse)
+        Intake.sysIdQuasistatic(SysIdRoutine.Direction.kReverse)
       );
       new JoystickButton(manipulatorController, Button.kX.value).whileTrue(
-        shooter.sysIdQuasistatic(SysIdRoutine.Direction.kForward)
+        Intake.sysIdQuasistatic(SysIdRoutine.Direction.kForward)
       );
 
       */
 
       /*new JoystickButton(controller, Button.kX.value).whileTrue(
-        shooter.shoot()
+        Intake.shoot()
       );
       */
       

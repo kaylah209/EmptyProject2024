@@ -8,15 +8,19 @@ import static edu.wpi.first.units.MutableMeasure.mutable;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.RPM;
+import static edu.wpi.first.units.Units.Rotations;
+import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static edu.wpi.first.units.Units.Volts;
 
 import com.revrobotics.CANSparkBase;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
 import com.revrobotics.CANSparkBase.ControlType;
 
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.Angle;
 import edu.wpi.first.units.Distance;
 import edu.wpi.first.units.Measure;
 import edu.wpi.first.units.MutableMeasure;
@@ -29,17 +33,18 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
-public class Shooter extends SubsystemBase {
+public class Intake extends SubsystemBase {
     CANSparkMax motor = MotorControllerFactory.createSparkMax(9, MotorConfig.NEO_550);
     SparkPIDController pid = motor.getPIDController();
+    RelativeEncoder motorEncoder = motor.getEncoder();
 
     private final MutableMeasure<Voltage> voltage = mutable(Volts.of(0));
     private final MutableMeasure<Velocity<Distance>> velocity = mutable(MetersPerSecond.of(0));
-    private final MutableMeasure<Distance> distance = mutable(Meters.of(0));
+    private final MutableMeasure<Velocity<Angle>> angularVel = mutable(RotationsPerSecond.of(0));
+    private final MutableMeasure<Angle> distance = mutable(Rotations.of(0));
     private SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(0, 0, 0);
 
-
-    public Shooter() {
+    public Intake() {
        // pid.setP(/*get from sysid */);
        // pid.setD(/*get from sysid */);
         
@@ -61,9 +66,9 @@ public class Shooter extends SubsystemBase {
     public void logMotor(SysIdRoutineLog log) {
         log.motor("shooter-motor").voltage(voltage.mut_replace(
                 motor.get() * RobotController.getBatteryVoltage(),
-                Volts)).linearVelocity(velocity.mut_replace(Units.inchesToMeters(motor.getEncoder().getVelocity()),
-                        MetersPerSecond))
-                .linearPosition(distance.mut_replace(Units.inchesToMeters(motor.getEncoder().getPosition()), Meters));
+                Volts)).angularVelocity(angularVel.mut_replace((motorEncoder.getVelocity()/60),
+                        RotationsPerSecond))
+                .angularPosition(distance.mut_replace((motor.getEncoder().getPosition()), Rotations));
     }
 
     private final SysIdRoutine routine = new SysIdRoutine(
