@@ -48,6 +48,7 @@ public class Intake extends SubsystemBase {
     private double dsDepth = 9.97;
     private double detectDistance = 13;
     private boolean hasGamePiece = false;
+    private boolean useRPMSpeed = false;
     public Intake() {
        // pid.setP(/*get from sysid */);
        // pid.setD(/*get from sysid */);
@@ -58,6 +59,8 @@ public class Intake extends SubsystemBase {
         pid.setP(kP);
         pid.setD(kD);
         SmartDashboard.putNumber("motorSpeed", 0);
+        SmartDashboard.putBoolean("useRPMSpeed", false);
+        
     }
     public void driveMotor(Measure<Voltage> volts) {
         motor.setVoltage(volts.in(Volts));
@@ -69,8 +72,14 @@ public class Intake extends SubsystemBase {
         return gamePieceDistance() < detectDistance;
     }
     public void periodic() {
+        useRPMSpeed = SmartDashboard.getBoolean("useRPMSpeed", false);
         if(!hasGamePiece) {
+            if(!useRPMSpeed) {
             motor.set(SmartDashboard.getNumber("motorSpeed", 0));
+            } else {
+                
+                pid.setReference(SmartDashboard.getNumber("TargetRPM",0), CANSparkBase.ControlType.kVelocity,0, feedforward.calculate(motorEncoder.getVelocity()));
+            }
         } else {
             pid.setReference(0, CANSparkBase.ControlType.kVelocity, 0, feedforward.calculate(motorEncoder.getVelocity()));
         }
