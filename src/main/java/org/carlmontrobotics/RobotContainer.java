@@ -39,17 +39,19 @@ public class RobotContainer {
   public final GenericHID manipulatorController = new GenericHID(OI.Manipulator.port);
 
   public RobotContainer() {
-    new JoystickButton(driverController, Button.kY.value).whileTrue(Intake.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
-    new JoystickButton(driverController, Button.kA.value).whileTrue(Intake.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
-    new JoystickButton(driverController, Button.kB.value).whileTrue(Intake.sysIdDynamic(SysIdRoutine.Direction.kForward));
-    new JoystickButton(driverController, Button.kX.value).whileTrue(Intake.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+    setSysIDBindings();
     //new JoystickButton(driverController, 4).onTrue(new InstantCommand( ()-> System.err.println("FUCKING WORK")));
     setDefaultCommands(); 
     //setBindingsDriver();
     setBindingsManipulator();
   }
 
-
+  public void setSysIDBindings() {
+    new JoystickButton(driverController, Button.kY.value).whileTrue(Intake.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+    new JoystickButton(driverController, Button.kA.value).whileTrue(Intake.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+    new JoystickButton(driverController, Button.kB.value).whileTrue(Intake.sysIdDynamic(SysIdRoutine.Direction.kForward));
+    new JoystickButton(driverController, Button.kX.value).whileTrue(Intake.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+  }
   private void setDefaultCommands() {
     // drivetrain.setDefaultCommand(new TeleopDrive(
     //   drivetrain,

@@ -1,5 +1,6 @@
 package org.carlmontrobotics.subsystems;
 
+import static org.carlmontrobotics.Constants.*;
 import org.carlmontrobotics.Robot;
 import org.carlmontrobotics.RobotContainer;
 import org.carlmontrobotics.lib199.MotorConfig;
@@ -12,6 +13,7 @@ import static edu.wpi.first.units.Units.Rotations;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static edu.wpi.first.units.Units.Volts;
 
+import com.playingwithfusion.TimeOfFlight;
 import com.revrobotics.CANSparkBase;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
@@ -34,37 +36,50 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
 public class Intake extends SubsystemBase {
-    CANSparkMax motor = MotorControllerFactory.createSparkMax(9, MotorConfig.NEO_550);
+    CANSparkMax motor = MotorControllerFactory.createSparkMax(motorPort, MotorConfig.NEO); //double check motor port
     SparkPIDController pid = motor.getPIDController();
     RelativeEncoder motorEncoder = motor.getEncoder();
 
     private final MutableMeasure<Voltage> voltage = mutable(Volts.of(0));
-    private final MutableMeasure<Velocity<Distance>> velocity = mutable(MetersPerSecond.of(0));
     private final MutableMeasure<Velocity<Angle>> angularVel = mutable(RotationsPerSecond.of(0));
     private final MutableMeasure<Angle> distance = mutable(Rotations.of(0));
-    private SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(0, 0, 0);
-
+    private SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(kS, kV, kA); //double check constants | PLEASE TUNE IT TOMORROW TO FULLY TEST IT
+    private TimeOfFlight distanceSensor = new TimeOfFlight(10); //make sure id port is correct here
+    private double dsDepth = 9.97;
+    private double detectDistance = 13;
+    private boolean hasGamePiece = false;
     public Intake() {
        // pid.setP(/*get from sysid */);
        // pid.setD(/*get from sysid */);
         
         SmartDashboard.putNumber("Target RPM", 0);
 
-        motor.getEncoder().setPositionConversionFactor(2 * Math.PI * 2); //This will be different since the wheel diamters will not be the same. THIS IS FOR DISTANCE
+        // kinda no works. | motor.getEncoder().setPositionConversionFactor(2 * Math.PI * 2); //This will be different since the wheel diamters will not be the same. THIS IS FOR DISTANCE
+        pid.setP(kP);
+        pid.setD(kD);
+        SmartDashboard.putNumber("motorSpeed", 0);
     }
     public void driveMotor(Measure<Voltage> volts) {
-
         motor.setVoltage(volts.in(Volts));
-
     }
-
+    public double gamePieceDistance() {
+        return Units.metersToInches((distanceSensor.getRange() - dsDepth) /1000);
+    }
+    public boolean hasGamePiece() {
+        return gamePieceDistance() < detectDistance;
+    }
     public void periodic() {
-        double targetRPM = SmartDashboard.getNumber("Target RPM", 0);
-        pid.setReference(targetRPM, CANSparkBase.ControlType.kVelocity, 0, feedforward.calculate(0, 0));
+        if(!hasGamePiece) {
+            motor.set(SmartDashboard.getNumber("motorSpeed", 0));
+        } else {
+            pid.setReference(0, CANSparkBase.ControlType.kVelocity, 0, feedforward.calculate(motorEncoder.getVelocity()));
+        }
     }
+
+    //Ahead are Sysid tests
 
     public void logMotor(SysIdRoutineLog log) {
-        log.motor("shooter-motor").voltage(voltage.mut_replace(
+        log.motor("intake-motor").voltage(voltage.mut_replace(
                 motor.get() * RobotController.getBatteryVoltage(),
                 Volts)).angularVelocity(angularVel.mut_replace((motorEncoder.getVelocity()/60),
                         RotationsPerSecond))
