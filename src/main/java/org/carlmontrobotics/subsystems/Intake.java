@@ -58,7 +58,7 @@ public class Intake extends SubsystemBase {
         // kinda no works. | motor.getEncoder().setPositionConversionFactor(2 * Math.PI * 2); //This will be different since the wheel diamters will not be the same. THIS IS FOR DISTANCE
         pid.setP(kP);
         pid.setD(kD);
-        SmartDashboard.putNumber("motorSpeed", 0);
+        SmartDashboard.putNumber("motorSpeed", 0); //Enter Positive Number for intake
         SmartDashboard.putBoolean("useRPMSpeed", false);
         
     }
@@ -75,10 +75,10 @@ public class Intake extends SubsystemBase {
         useRPMSpeed = SmartDashboard.getBoolean("useRPMSpeed", false);
         if(!hasGamePiece) {
             if(!useRPMSpeed) {
-            motor.set(SmartDashboard.getNumber("motorSpeed", 0));
+            motor.set(-(SmartDashboard.getNumber("motorSpeed", 0)));
             } else {
                 
-                pid.setReference(SmartDashboard.getNumber("TargetRPM",0), CANSparkBase.ControlType.kVelocity,0, feedforward.calculate(motorEncoder.getVelocity()));
+                pid.setReference(-(SmartDashboard.getNumber("TargetRPM",0)), CANSparkBase.ControlType.kVelocity,0, feedforward.calculate(motorEncoder.getVelocity()));
             }
         } else {
             pid.setReference(0, CANSparkBase.ControlType.kVelocity, 0, feedforward.calculate(motorEncoder.getVelocity()));
