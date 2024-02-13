@@ -5,7 +5,7 @@ public final class Constants {
     //     public static final double MAX_SPEED_MPS = 2;
     // }
     public static final class SHOOTER {
-        public static final double kP = 0;
+        public static final double kP = 0.0001;
         public static final double kI = 0;
         public static final double kD = 0;
         public static final double kS = 0.29753;

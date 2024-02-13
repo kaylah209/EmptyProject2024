@@ -1,10 +1,6 @@
 package org.carlmontrobotics.subsystems;
 
-import static org.carlmontrobotics.Constants.*;
-
 import org.carlmontrobotics.Constants.SHOOTER;
-import org.carlmontrobotics.Robot;
-import org.carlmontrobotics.RobotContainer;
 import org.carlmontrobotics.lib199.MotorConfig;
 import org.carlmontrobotics.lib199.MotorControllerFactory;
 import static edu.wpi.first.units.MutableMeasure.mutable;
@@ -18,14 +14,11 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
 
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.Angle;
-import edu.wpi.first.units.Distance;
 import edu.wpi.first.units.Measure;
 import edu.wpi.first.units.MutableMeasure;
 import edu.wpi.first.units.Velocity;
 import edu.wpi.first.units.Voltage;
-import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.sysid.SysIdRoutineLog;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -51,7 +44,7 @@ public class Shooter extends SubsystemBase {
         pidController.setI(kI);
         SmartDashboard.putNumber("Shooter RPS", 0);
         SmartDashboard.putNumber("kP", kP);
-        SmartDashboard.putNumber("kI", kP);
+        SmartDashboard.putNumber("kI", kI);
         // SmartDashboard.putNumber("kIZone", kIZone);
         SmartDashboard.putNumber("kD", kD);
         SmartDashboard.putNumber("Feedforward", 0);
@@ -113,8 +106,10 @@ public class Shooter extends SubsystemBase {
         double feed = ff.calculate(targetRPS);
         SmartDashboard.putNumber("Feedforward", feed);
 
-        //SmartDashboard.putNumber("Error", motor.getBusVoltage() * motor.getAppliedOutput() - feed);
-        //SmartDashboard.putNumber("Motor Voltage", motor.getBusVoltage() * motor.getAppliedOutput());
+        // SmartDashboard.putNumber("Error", motor.getBusVoltage() *
+        // motor.getAppliedOutput() - feed);
+        // SmartDashboard.putNumber("Motor Voltage", motor.getBusVoltage() *
+        // motor.getAppliedOutput());
 
         // motor.setVoltage(feed);
         pidController.setReference(targetRPS * 60, CANSparkBase.ControlType.kVelocity, 0, feed);
