@@ -26,7 +26,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
 public class Shooter extends SubsystemBase {
-    CANSparkMax motor = MotorControllerFactory.createSparkMax(1, MotorConfig.NEO_550);
+    CANSparkMax motor = MotorControllerFactory.createSparkMax(17, MotorConfig.NEO_550);
     SparkPIDController pidController = motor.getPIDController();
     private final MutableMeasure<Voltage> voltage = mutable(Volts.of(0));
     private final MutableMeasure<Velocity<Angle>> velocity = mutable(RotationsPerSecond.of(0));
@@ -87,7 +87,8 @@ public class Shooter extends SubsystemBase {
 
     @Override
     public void periodic() {
-        double targetRPS = SmartDashboard.getNumber("Shooter RPS", 0);
+        SmartDashboard.putNumber("Motor velocity", encoder.getVelocity());
+        double targetRPS = SmartDashboard.getNumber("Shooter RPM", 0)/60;
         kP = SmartDashboard.getNumber("kP", kP);
         kD = SmartDashboard.getNumber("kD", kD);
         kI = SmartDashboard.getNumber("kI", kI);
@@ -112,7 +113,7 @@ public class Shooter extends SubsystemBase {
         // motor.getAppliedOutput());
 
         // motor.setVoltage(feed);
-        pidController.setReference(targetRPS * 60, CANSparkBase.ControlType.kVelocity, 0, feed);
+        pidController.setReference(targetRPS*60, CANSparkBase.ControlType.kVelocity, 0, feed);
     }
 
 }
