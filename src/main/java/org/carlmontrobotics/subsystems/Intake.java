@@ -34,7 +34,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
 public class Intake extends SubsystemBase {
-    CANSparkMax motor = MotorControllerFactory.createSparkMax(9, MotorConfig.NEO_550);
+    CANSparkMax motor = MotorControllerFactory.createSparkMax(1, MotorConfig.NEO_550);
     SparkPIDController pid = motor.getPIDController();
     RelativeEncoder motorEncoder = motor.getEncoder();
 
