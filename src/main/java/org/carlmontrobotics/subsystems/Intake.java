@@ -44,7 +44,8 @@ public class Intake extends SubsystemBase {
     private final MutableMeasure<Velocity<Angle>> angularVel = mutable(RotationsPerSecond.of(0));
     private final MutableMeasure<Angle> distance = mutable(Rotations.of(0));
     private SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(kS, kV, kA); //double check constants | PLEASE TUNE IT TOMORROW TO FULLY TEST IT
-    private TimeOfFlight distanceSensor = new TimeOfFlight(10); //make sure id port is correct here
+    private TimeOfFlight distanceSensor = new TimeOfFlight(dsPort1); //make sure id port is correct here
+    private TimeOfFlight distanceSenor2 = new TimeOfFlight(dsPort2); // insert 
     private double dsDepth = 9.97;
     private double detectDistance = 13;
     private boolean hasGamePiece = false;
@@ -65,24 +66,36 @@ public class Intake extends SubsystemBase {
     public void driveMotor(Measure<Voltage> volts) {
         motor.setVoltage(volts.in(Volts));
     }
-    public double gamePieceDistance() {
+    public double getGamePieceDistance1() {
         return Units.metersToInches((distanceSensor.getRange() - dsDepth) /1000);
     }
-    public boolean hasGamePiece() {
-        return gamePieceDistance() < detectDistance;
+    public double getGamePieceDistance2() {
+        return Units.metersToInches((distanceSensor.getRange() - dsDepth) /1000);
     }
+    public boolean gameDistanceSees1st() {
+        return getGamePieceDistance1() < detectDistance;
+    }
+    public boolean gameDistanceSees2nd() {
+        return getGamePieceDistance2() < detectDistance;
+    }
+    @Override
     public void periodic() {
         useRPMSpeed = SmartDashboard.getBoolean("useRPMSpeed", false);
-        if(!hasGamePiece) {
+        
+        if(!gameDistanceSees1st()) {
             if(!useRPMSpeed) {
             motor.set(-(SmartDashboard.getNumber("motorSpeed", 0)));
             } else {
                 
-                pid.setReference(-(SmartDashboard.getNumber("TargetRPM",0)), CANSparkBase.ControlType.kVelocity,0, feedforward.calculate(motorEncoder.getVelocity()));
+                pid.setReference(-(SmartDashboard.getNumber("TargetRPM",0)*60), CANSparkBase.ControlType.kVelocity,0, feedforward.calculate(0));
             }
-        } else {
-            pid.setReference(0, CANSparkBase.ControlType.kVelocity, 0, feedforward.calculate(motorEncoder.getVelocity()));
+        } else {            
+            pid.setReference(-1, CANSparkBase.ControlType.kVelocity, 0, feedforward.calculate(-1));
+            if(gameDistanceSees2nd()) {
+                pid.setReference(0, CANSparkBase.ControlType.kVelocity, 0, feedforward.calculate(0));
+            }
         }
+    
     }
 
     //Ahead are Sysid tests

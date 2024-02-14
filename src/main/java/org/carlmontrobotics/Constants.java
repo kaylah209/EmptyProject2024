@@ -9,6 +9,8 @@ public final class Constants {
             public static final double kA = 0;
             public static final double kP = 0;
             public static final double kD = 0;
+            public static final int dsPort1 = 10;
+            public static final int dsPort2 = 9;
             public static final int motorPort = 9;
     public static final class OI {
         public static final class Driver {
