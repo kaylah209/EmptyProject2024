@@ -52,8 +52,6 @@ public class Intake extends SubsystemBase {
     double kI = 0;
     private double dsDepth = 9.97;
     private double detectDistance = 13;
-    private boolean hasGamePiece = false;
-    private boolean useRPMSpeed = false;
     public Intake() {
         // kinda no works. | motor.getEncoder().setPositionConversionFactor(2 * Math.PI * 2); //This will be different since the wheel diamters will not be the same. THIS IS FOR DISTANCE
         pid.setP(kP);
@@ -84,8 +82,8 @@ public class Intake extends SubsystemBase {
         kP = SmartDashboard.getNumber("kP", kP);
         kD = SmartDashboard.getNumber("kD", kD);
         kI = SmartDashboard.getNumber("kI", kI);
-        SmartDashboard.putBoolean("kid toucher", gameDistanceSees1st());
-        SmartDashboard.putBoolean("kid toucher 2", gameDistanceSees2nd());
+        SmartDashboard.putBoolean("distance sensor 1", gameDistanceSees1st());
+        SmartDashboard.putBoolean("distance sensor 2", gameDistanceSees2nd());
         SmartDashboard.putNumber("CurrentMotorRPM", motorEncoder.getVelocity()); //Enter Positive Number for intake
         if(pid.getP() != kP) {
             pid.setP(kP);
@@ -98,23 +96,18 @@ public class Intake extends SubsystemBase {
         }
         
         //pid.setReference((TargetRPM), CANSparkBase.ControlType.kVelocity,0, feedforward.calculate(TargetRPM/60));
-        
-        // useRPMSpeed = SmartDashboard.getBoolean("useRPMSpeed", false);
+        //TODO: Determine whether pid and feedforward values are accurate and why motor is constantly at 500 rpm
          SmartDashboard.putNumber("distance sensor 1",getGamePieceDistance1());
          SmartDashboard.putNumber("distance sensor 2",getGamePieceDistance2());
+
         if(!gameDistanceSees1st()) {
-                motor.set(-0.2);
+            pid.setReference((-TargetRPM), CANSparkBase.ControlType.kVelocity,0, feedforward.calculate(-TargetRPM/60));
          } else {    
-            motor.set(-0.1);
+            pid.setReference(-1, CANSparkBase.ControlType.kVelocity,0,feedforward.calculate(-1/60));
             if(gameDistanceSees2nd()) {
-                motor.set(0);
+                pid.setReference(0, CANSparkBase.ControlType.kVelocity,0,feedforward.calculate(0));
             } 
-            /*        
-             pid.setReference(-1, CANSparkBase.ControlType.kVelocity, 0, feedforward.calculate(-1/60));
-           if(gameDistanceSees2nd()) {
-                     pid.setReference(0, CANSparkBase.ControlType.kVelocity, 0, feedforward.calculate(0));
-                     */
-            }
+        }
          }
     
 
