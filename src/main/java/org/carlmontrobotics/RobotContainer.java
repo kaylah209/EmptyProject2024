@@ -52,6 +52,7 @@ public class RobotContainer {
     new JoystickButton(driverController, Button.kB.value).whileTrue(Intake.sysIdDynamic(SysIdRoutine.Direction.kForward));
     new JoystickButton(driverController, Button.kX.value).whileTrue(Intake.sysIdDynamic(SysIdRoutine.Direction.kReverse));
   }
+  
   private void setDefaultCommands() {
     // drivetrain.setDefaultCommand(new TeleopDrive(
     //   drivetrain,

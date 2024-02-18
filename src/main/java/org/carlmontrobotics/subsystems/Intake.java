@@ -36,7 +36,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
 public class Intake extends SubsystemBase {
-    CANSparkMax motor = MotorControllerFactory.createSparkMax(motorPort, MotorConfig.NEO); //double check motor port
+    CANSparkMax motor = MotorControllerFactory.createSparkMax(motorPort, MotorConfig.NEO_550); //double check motor port
     SparkPIDController pid = motor.getPIDController();
     RelativeEncoder motorEncoder = motor.getEncoder();
    
@@ -47,22 +47,21 @@ public class Intake extends SubsystemBase {
     private SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(kS, kV, kA); //double check constants | PLEASE TUNE IT TOMORROW TO FULLY TEST IT
     private TimeOfFlight distanceSensor = new TimeOfFlight(dsPort1); //make sure id port is correct here
     private TimeOfFlight distanceSenor2 = new TimeOfFlight(dsPort2); // insert 
+    double kP = 0.00014312;
+    double kD = 0;
+    double kI = 0;
     private double dsDepth = 9.97;
     private double detectDistance = 13;
     private boolean hasGamePiece = false;
     private boolean useRPMSpeed = false;
     public Intake() {
-       pid.setP(kP);
-        pid.setD(0);
-        
-        
-
         // kinda no works. | motor.getEncoder().setPositionConversionFactor(2 * Math.PI * 2); //This will be different since the wheel diamters will not be the same. THIS IS FOR DISTANCE
         pid.setP(kP);
         pid.setD(kD);
+        
         //SmartDashboard.putNumber("motorSpeed", 0); //Enter Positive Number for intake
         //SmartDashboard.putBoolean("useRPMSpeed", false);
-        SmartDashboard.putNumber("Target RPM", 1000);
+        SmartDashboard.putNumber("Target RPM", 0);
     }
     public void driveMotor(Measure<Voltage> volts) {
         motor.setVoltage(volts.in(Volts));
@@ -71,7 +70,7 @@ public class Intake extends SubsystemBase {
         return Units.metersToInches((distanceSensor.getRange() - dsDepth) /1000);
     }
     public double getGamePieceDistance2() {
-        return Units.metersToInches((distanceSensor.getRange() - dsDepth) /1000);
+        return Units.metersToInches((distanceSenor2.getRange() - dsDepth) /1000);
     }
     public boolean gameDistanceSees1st() {
         return getGamePieceDistance1() < detectDistance;
@@ -80,37 +79,50 @@ public class Intake extends SubsystemBase {
         return getGamePieceDistance2() < detectDistance;
     }
     @Override
-    public void periodic() {
+    public void periodic() { 
         double TargetRPM = SmartDashboard.getNumber("Target RPM", 0);
+        kP = SmartDashboard.getNumber("kP", kP);
+        kD = SmartDashboard.getNumber("kD", kD);
+        kI = SmartDashboard.getNumber("kI", kI);
+        SmartDashboard.putBoolean("kid toucher", gameDistanceSees1st());
+        SmartDashboard.putBoolean("kid toucher 2", gameDistanceSees2nd());
         SmartDashboard.putNumber("CurrentMotorRPM", motorEncoder.getVelocity()); //Enter Positive Number for intake
-
-    
-        pid.setReference((TargetRPM), CANSparkBase.ControlType.kVelocity,0, feedforward.calculate(TargetRPM));
+        if(pid.getP() != kP) {
+            pid.setP(kP);
+        }
+        if (pid.getD() != kD) {
+            pid.setD(kD);
+        }
+        if (pid.getI() != kI) {
+            pid.setI(kI);
+        }
         
+        //pid.setReference((TargetRPM), CANSparkBase.ControlType.kVelocity,0, feedforward.calculate(TargetRPM/60));
         
         // useRPMSpeed = SmartDashboard.getBoolean("useRPMSpeed", false);
-        
-        // if(!gameDistanceSees1st()) {
-        //     if(!useRPMSpeed) {
-        //     motor.set(-(SmartDashboard.getNumber("motorSpeed", 0)));
-        //     } else {
-                
-        //         pid.setReference(-(SmartDashboard.getNumber("TargetRPM",0)*60), CANSparkBase.ControlType.kVelocity,0, feedforward.calculate(0));
-        //     }
-        // } else {            
-        //     pid.setReference(-1, CANSparkBase.ControlType.kVelocity, 0, feedforward.calculate(-1));
-        //     if(gameDistanceSees2nd()) {
-        //         pid.setReference(0, CANSparkBase.ControlType.kVelocity, 0, feedforward.calculate(0));
-        //     }
-        // }
+         SmartDashboard.putNumber("distance sensor 1",getGamePieceDistance1());
+         SmartDashboard.putNumber("distance sensor 2",getGamePieceDistance2());
+        if(!gameDistanceSees1st()) {
+                motor.set(-0.2);
+         } else {    
+            motor.set(-0.1);
+            if(gameDistanceSees2nd()) {
+                motor.set(0);
+            } 
+            /*        
+             pid.setReference(-1, CANSparkBase.ControlType.kVelocity, 0, feedforward.calculate(-1/60));
+           if(gameDistanceSees2nd()) {
+                     pid.setReference(0, CANSparkBase.ControlType.kVelocity, 0, feedforward.calculate(0));
+                     */
+            }
+         }
     
-    }
 
     //Ahead are Sysid tests
 
     public void logMotor(SysIdRoutineLog log) {
         log.motor("intake-motor").voltage(voltage.mut_replace(
-                motor.get() * RobotController.getBatteryVoltage(),
+                motor.getBusVoltage() * motor.getAppliedOutput(),
                 Volts)).angularVelocity(angularVel.mut_replace((motorEncoder.getVelocity()/60),
                         RotationsPerSecond))
                 .angularPosition(distance.mut_replace((motor.getEncoder().getPosition()), Rotations));
