@@ -55,7 +55,8 @@ public class Intake extends SubsystemBase {
     private SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(kS, kV, kA); //double check constants | PLEASE TUNE IT TOMORROW TO FULLY TEST IT
     private TimeOfFlight distanceSensor = new TimeOfFlight(dsPort1); //make sure id port is correct here
     private TimeOfFlight distanceSenor2 = new TimeOfFlight(dsPort2); // insert 
-    double kP = 0.00014312;
+    //double kP = 0.00014312;
+    double kP = 0.039665;
     double kD = 0;
     double kI = 0;
     private double dsDepth = 9.97;
@@ -119,11 +120,13 @@ public class Intake extends SubsystemBase {
 
         if(!gameDistanceSees1st()) {
             pid.setReference((-TargetRPM), CANSparkBase.ControlType.kVelocity,0, feedforward.calculate(-TargetRPM/60));
-         } else {    
+        } 
+        else if (gameDistanceSees1st()){    
             pid.setReference((-TargetRPM), CANSparkBase.ControlType.kVelocity,0,feedforward.calculate(-TargetRPM/240));
-            if(gameDistanceSees2nd()) {
-                pid.setReference(0, CANSparkBase.ControlType.kVelocity,0,feedforward.calculate(0));
-            } 
+        }
+        else{
+           // pid.setReference(0, CANSparkBase.ControlType.kVelocity,0,feedforward.calculate(0));
+           motor.set(0);
         }
     }
     
@@ -135,7 +138,7 @@ public class Intake extends SubsystemBase {
                 motor.getBusVoltage() * motor.getAppliedOutput(),
                 Volts)).angularVelocity(angularVel.mut_replace((motorEncoder.getVelocity()/60),
                         RotationsPerSecond))
-                .angularPosition(distance.mut_replace((motor.getEncoder().getPosition()), Rotations));
+                .angularPosition(distance.mut_replace((motorEncoder.getPosition()), Rotations));
     }
 
     private final SysIdRoutine routine = new SysIdRoutine(
