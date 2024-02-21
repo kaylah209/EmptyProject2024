@@ -4,9 +4,9 @@ public final class Constants {
     // public static final class Drivetrain {
     //     public static final double MAX_SPEED_MPS = 2;
     // }
-    public final static double kS = .16158;
-            public static final double kV = 0.066742;
-            public static final double kA = 0.0076259;
+    public final static double kS = 0.3796;
+            public static final double kV =0.0667;
+            public static final double kA = 0.005977;
             
             public static final int dsPort1 = 10;
             public static final int dsPort2 = 0;
