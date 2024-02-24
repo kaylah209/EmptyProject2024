@@ -1,3 +1,5 @@
+import static org.mockito.Mockito.validateMockitoUsage;
+
 public class Arm {
     public CANSparkMax ArmMotor = MotorControllerFactory.createSparkMax(6, MotorConfig.NEO);
     
@@ -9,6 +11,7 @@ public class Arm {
     @Override
     public void robotPeriodic() {
         SmartDashboard.putNumber("Arm Encoder Value", armMotor.getSelectedSensorPosition() * kArmTick2Deg);
+        suoer.robotPeriodic();
     }
    @Override
     public void robotInit() {
@@ -17,6 +20,7 @@ public class Arm {
         armMotor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 10);
         //reset encoders to ZERO
 
+        drive.setDeadband(0.05);
     }
    @Override
    public void robotPeriodic() {
@@ -26,6 +30,8 @@ public class Arm {
    @Override
    public void autonomousInit() {
      m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+     
+     armMotor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 10);
  
      if (m_autonomousCommand != null) {
        m_autonomousCommand.schedule();
@@ -34,7 +40,18 @@ public class Arm {
  
    @Override
    public void autonomousPeriodic() {
+      double leftPosition1 = leftMotor1.getSelectedSensorPosition() * kDriveTick2Feet;
+      double leftPosition2 = leftMotor2.getSelectedSensorPosition() * kDriveTick2Feet;
+      double rightPosition1 = rightMotor1.getSelectedSensorPosition() * kDriveTick2Feet;
+      double rightPosition2 = rightMotor2.getSelectedSensorPosition() * kDriveTick2Feet;
 
+      double distance = (leftPosition1 + leftPosition2 + rightPosition1 + rightPosition2)/4;
+
+      if (distance < 10){
+        drive.tankDrive(0.6, 0.6);
+      }else {
+        drive.tankDrive(0, 0);
+      }
    }
 
    @Override
@@ -46,9 +63,11 @@ public class Arm {
  
    @Override
    public void teleopPeriodic() {
-   
- 
+    
+    double armPower = - operatorJoystick.getRawAxis(1); 
    }
+   armPower *= 0.5;
+   armMotor.set(ControlMode.PercentOutput, armPower);
  
    @Override
    public void disabledInit() {}

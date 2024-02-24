@@ -10,9 +10,12 @@ public class Drivetrain {
    private double startTime;
    
    private final double kDriveTick2Feet = 1.0/ 4096 * 6 * Math.PI / 12;
+
+   private DifferentialDrive drive = new DifferentialDrive(leftMotor, rightMotor);
     @Override
     public void robotPeriodic() {
-        SmartDashboard.putNumber("Left Drive Encoder Value", leftMotor.getSelectedSensorPosition() * );
+        SmartDashboard.putNumber("Left Drive Encoder Value", leftMotor.getSelectedSensorPosition() * kDriveTick2Feet);
+        SmartDashboard.putNumber("Right Drive Encoder Value", rightMotor.getSelectedSensorPosition() * kDriveTick2Feet);
     }
     @Override
     public void robotInit() {
@@ -31,6 +34,8 @@ public class Drivetrain {
         rightMotor2.setSelectedSensorPosition(0, 0, 10);
         leftMotor1.setSelectedSensorPosition(0, 0, 10);
         leftMotor2.setSelectedSensorPosition(0, 0, 10);
+
+        drive.setDeadband(0.05);
     }
    @Override
    public void robotPeriodic() {
@@ -40,6 +45,11 @@ public class Drivetrain {
    @Override
    public void autonomousInit() {
      m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+
+        rightMotor1.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
+        rightMotor2.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
+        leftMotor1.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
+        leftMotor2.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
  
      if (m_autonomousCommand != null) {
        m_autonomousCommand.schedule();
@@ -72,16 +82,19 @@ public class Drivetrain {
  
    @Override
    public void teleopPeriodic() {
-    double speed = -driverJoy1.getRawAxis(0) * 0.6;
-    double turn = driverJoy1.getRawAxis(1) * 0.3;
+    double speed = -driverJoy1.getRawAxis(0);
+    double turn = driverJoy1.getRawAxis(1);
 
+    drive.arcadeDrive(speed * 0.6, turn *0.3)
     double left = speed + turn;
     double right = speed - turn;
 
-     rightMotor1.setSpeed(left);
-     rightMotor2.setSpeed(left);
-     leftMotor1.setSpeed(-right);
-     leftMotor2.setSpeed(-right);
+     //rightMotor1.setSpeed(left);
+     //rightMotor2.setSpeed(left);
+     //leftMotor1.setSpeed(-right);
+     //leftMotor2.setSpeed(-right);
+
+     
  
    }
  
