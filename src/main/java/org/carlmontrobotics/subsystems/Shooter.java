@@ -39,7 +39,7 @@ public class Shooter extends SubsystemBase {
     double kI = 0;
     double kIZone = 0;
     RelativeEncoder encoder = motor.getEncoder();
-    private ShuffleboardTab sysIDTab  = Shuffleboard.getTab("armSysid");
+    private ShuffleboardTab sysIDTab  = Shuffleboard.getTab("Sysid");
     public Shooter() {
         // pidController.setP(SHOOTER.kP);
         // pidController.setD(SHOOTER.kD);
@@ -54,10 +54,10 @@ public class Shooter extends SubsystemBase {
         // SmartDashboard.putNumber("plswork", 0);
         // THIS LINE BELOW DOESN'T WORK
         // encoder.setVelocityConversionFactor(1/9999999);
-        sysIDTab.add("qf", sysIdQuasistatic(SysIdRoutine.Direction.kForward));
-        sysIDTab.add("qb", sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
-        sysIDTab.add("df", sysIdDynamic(SysIdRoutine.Direction.kForward));
-        sysIDTab.add("db", sysIdDynamic(SysIdRoutine.Direction.kReverse));
+        sysIDTab.add("quasistatic forward", sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+        sysIDTab.add("quasistatic backward", sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+        sysIDTab.add("dynamic foward", sysIdDynamic(SysIdRoutine.Direction.kForward));
+        sysIDTab.add("dynamic backward", sysIdDynamic(SysIdRoutine.Direction.kReverse));
     }
 
     public void driveMotor(Measure<Voltage> volts) {
