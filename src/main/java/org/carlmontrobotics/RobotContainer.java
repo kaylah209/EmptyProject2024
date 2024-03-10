@@ -36,13 +36,13 @@ public class RobotContainer {
   //2. Use absolute paths from constants to reduce confusion
   Shooter shooter = new Shooter();
   public final GenericHID driverController = new GenericHID(OI.Driver.port);
-  public final GenericHID manipulatorController = new GenericHID(OI.Manipulator.port);
+  //public final GenericHID manipulatorController = new GenericHID(OI.Manipulator.port);
 
   public RobotContainer() {
-    new JoystickButton(driverController, Button.kY.value).whileTrue(shooter.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
-    new JoystickButton(driverController, Button.kA.value).whileTrue(shooter.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
-    new JoystickButton(driverController, Button.kB.value).whileTrue(shooter.sysIdDynamic(SysIdRoutine.Direction.kForward));
-    new JoystickButton(driverController, Button.kX.value).whileTrue(shooter.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+    // new JoystickButton(driverController, Button.kY.value).whileTrue(shooter.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+    // new JoystickButton(driverController, Button.kA.value).whileTrue(shooter.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+    // new JoystickButton(driverController, Button.kB.value).whileTrue(shooter.sysIdDynamic(SysIdRoutine.Direction.kForward));
+    // new JoystickButton(driverController, Button.kX.value).whileTrue(shooter.sysIdDynamic(SysIdRoutine.Direction.kReverse));
     //new JoystickButton(driverController, 4).onTrue(new InstantCommand( ()-> System.err.println("FUCKING WORK")));
     setDefaultCommands(); 
     //setBindingsDriver();
@@ -63,21 +63,21 @@ public class RobotContainer {
       //XboxController controller = new XboxController(1);
       //Shooter shooter = new Shooter();
       
-      /* 
-      new JoystickButton(manipulatorController, Button.kY.value).whileTrue(
-        shooter.sysIdDynamic(SysIdRoutine.Direction.kForward)
-      );
-      new JoystickButton(manipulatorController, Button.kA.value).whileTrue(
-        shooter.sysIdDynamic(SysIdRoutine.Direction.kReverse)
-      );
-      new JoystickButton(manipulatorController, Button.kB.value).whileTrue(
-        shooter.sysIdQuasistatic(SysIdRoutine.Direction.kReverse)
-      );
-      new JoystickButton(manipulatorController, Button.kX.value).whileTrue(
-        shooter.sysIdQuasistatic(SysIdRoutine.Direction.kForward)
-      );
+       
+      // new JoystickButton(manipulatorController, Button.kY.value).whileTrue(
+      //   shooter.sysIdDynamic(SysIdRoutine.Direction.kForward)
+      // );
+      // new JoystickButton(manipulatorController, Button.kA.value).whileTrue(
+      //   shooter.sysIdDynamic(SysIdRoutine.Direction.kReverse)
+      // );
+      // new JoystickButton(manipulatorController, Button.kB.value).whileTrue(
+      //   shooter.sysIdQuasistatic(SysIdRoutine.Direction.kReverse)
+      // );
+      // new JoystickButton(manipulatorController, Button.kX.value).whileTrue(
+      //   shooter.sysIdQuasistatic(SysIdRoutine.Direction.kForward)
+      // );
 
-      */
+    
 
       /*new JoystickButton(controller, Button.kX.value).whileTrue(
         shooter.shoot()

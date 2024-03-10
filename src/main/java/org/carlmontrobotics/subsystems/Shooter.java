@@ -19,6 +19,8 @@ import edu.wpi.first.units.Measure;
 import edu.wpi.first.units.MutableMeasure;
 import edu.wpi.first.units.Velocity;
 import edu.wpi.first.units.Voltage;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.sysid.SysIdRoutineLog;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -26,31 +28,36 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
 public class Shooter extends SubsystemBase {
-    CANSparkMax motor = MotorControllerFactory.createSparkMax(17, MotorConfig.NEO_550);
-    SparkPIDController pidController = motor.getPIDController();
+    CANSparkMax motor = MotorControllerFactory.createSparkMax(1, MotorConfig.NEO_550);
+    //SparkPIDController pidController = motor.getPIDController();
     private final MutableMeasure<Voltage> voltage = mutable(Volts.of(0));
     private final MutableMeasure<Velocity<Angle>> velocity = mutable(RotationsPerSecond.of(0));
     private final MutableMeasure<Angle> distance = mutable(Rotations.of(0));
-    SimpleMotorFeedforward ff = new SimpleMotorFeedforward(SHOOTER.kS, SHOOTER.kV, SHOOTER.kA);
+    //SimpleMotorFeedforward ff = new SimpleMotorFeedforward(SHOOTER.kS, SHOOTER.kV, SHOOTER.kA);
     double kP = 0.0001;
     double kD = 0;
     double kI = 0;
     double kIZone = 0;
     RelativeEncoder encoder = motor.getEncoder();
-
+    private ShuffleboardTab sysIDTab  = Shuffleboard.getTab("armSysid");
     public Shooter() {
-        pidController.setP(SHOOTER.kP);
-        pidController.setD(SHOOTER.kD);
-        pidController.setI(kI);
-        SmartDashboard.putNumber("Shooter RPS", 0);
-        SmartDashboard.putNumber("kP", kP);
-        SmartDashboard.putNumber("kI", kI);
-        // SmartDashboard.putNumber("kIZone", kIZone);
-        SmartDashboard.putNumber("kD", kD);
-        SmartDashboard.putNumber("Feedforward", 0);
+        // pidController.setP(SHOOTER.kP);
+        // pidController.setD(SHOOTER.kD);
+        // pidController.setI(kI);
+        // SmartDashboard.putNumber("Shooter RPM", 0);
+        
+        // SmartDashboard.putNumber("kP", kP);
+        // SmartDashboard.putNumber("kI", kI);
+        // // SmartDashboard.putNumber("kIZone", kIZone);
+        // SmartDashboard.putNumber("kD", kD);
+        // SmartDashboard.putNumber("Feedforward", 0);
         // SmartDashboard.putNumber("plswork", 0);
         // THIS LINE BELOW DOESN'T WORK
         // encoder.setVelocityConversionFactor(1/9999999);
+        sysIDTab.add("qf", sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+        sysIDTab.add("qb", sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+        sysIDTab.add("df", sysIdDynamic(SysIdRoutine.Direction.kForward));
+        sysIDTab.add("db", sysIdDynamic(SysIdRoutine.Direction.kReverse));
     }
 
     public void driveMotor(Measure<Voltage> volts) {
@@ -87,33 +94,33 @@ public class Shooter extends SubsystemBase {
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("Motor velocity", encoder.getVelocity());
-        double targetRPS = SmartDashboard.getNumber("Shooter RPM", 0)/60;
-        kP = SmartDashboard.getNumber("kP", kP);
-        kD = SmartDashboard.getNumber("kD", kD);
-        kI = SmartDashboard.getNumber("kI", kI);
+        // SmartDashboard.putNumber("Motor velocity", encoder.getVelocity());
+        // double targetRPS = SmartDashboard.getNumber("Shooter RPM", 0)/60;
+        // kP = SmartDashboard.getNumber("kP", kP);
+        // kD = SmartDashboard.getNumber("kD", kD);
+        // kI = SmartDashboard.getNumber("kI", kI);
 
-        if (pidController.getP() != kP) {
-            pidController.setP(kP);
-        }
-        if (pidController.getD() != kD) {
-            pidController.setD(kD);
-        }
-        if (pidController.getI() != kI) {
-            pidController.setI(kI);
-        }
+        // if (pidController.getP() != kP) {
+        //     pidController.setP(kP);
+        // }
+        // if (pidController.getD() != kD) {
+        //     pidController.setD(kD);
+        // }
+        // if (pidController.getI() != kI) {
+        //     pidController.setI(kI);
+        // }
 
-        SmartDashboard.putNumber("Shooter current RPS", encoder.getVelocity() / 60);
-        double feed = ff.calculate(targetRPS);
-        SmartDashboard.putNumber("Feedforward", feed);
+        // SmartDashboard.putNumber("Shooter current RPS", encoder.getVelocity() / 60);
+        // double feed = ff.calculate(targetRPS);
+        // SmartDashboard.putNumber("Feedforward", feed);
 
-        // SmartDashboard.putNumber("Error", motor.getBusVoltage() *
-        // motor.getAppliedOutput() - feed);
-        // SmartDashboard.putNumber("Motor Voltage", motor.getBusVoltage() *
-        // motor.getAppliedOutput());
+        // // SmartDashboard.putNumber("Error", motor.getBusVoltage() *
+        // // motor.getAppliedOutput() - feed);
+        // // SmartDashboard.putNumber("Motor Voltage", motor.getBusVoltage() *
+        // // motor.getAppliedOutput());
 
-        // motor.setVoltage(feed);
-        pidController.setReference(targetRPS*60, CANSparkBase.ControlType.kVelocity, 0, feed);
+        // // motor.setVoltage(feed);
+        // pidController.setReference(targetRPS*60, CANSparkBase.ControlType.kVelocity, 0, feed);
     }
 
 }
