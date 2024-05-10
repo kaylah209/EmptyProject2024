@@ -1,6 +1,7 @@
 plugins {
     id "java"
-    id "edu.wpi.first.GradleRIO" version "2024.1.1"
+    id "edu.wpi.first.GradleRIO" version "2024.3.2"
+    id "com.peterabeles.gversion" version "1.10"    
 }
 
 java {
@@ -47,6 +48,17 @@ wpi.java.debugJni = false
 // Set this to true to enable desktop support.
 def includeDesktopSupport = true
 
+allprojects {
+    repositories {
+        maven { url 'https://jitpack.io' }//for lib199
+    }
+}
+
+// Don't cache changing modules
+configurations.all {
+    resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+}
+
 // Defining my dependencies. In this case, WPILib (+ friends), and vendor libraries.
 // Also defines JUnit 5.
 dependencies {
@@ -68,11 +80,7 @@ dependencies {
     simulationRelease wpi.sim.enableRelease()
 
     testImplementation 'org.junit.jupiter:junit-jupiter:5.10.1'
-    implementation('org.carlmontrobotics:lib199') {
-        version {
-            branch = '2024'
-        }
-    }
+    implementation "com.github.deepbluerobotics:lib199:69297b35a4fd817d3479963c5819685ddfc775fd"
 }
 
 test {
@@ -102,4 +110,14 @@ wpi.java.configureTestTasks(test)
 // Configure string concat to always inline compile
 tasks.withType(JavaCompile) {
     options.compilerArgs.add '-XDstringConcat=inline'
+}
+
+project.compileJava.dependsOn(createVersionFile)
+gversion {
+    language = "Properties"
+    srcDir       = "src/main/deploy/"
+    className    = "BuildInfo.properties"
+    dateFormat   = "yyyy-MM-dd HH:mm:ss z"
+    timeZone     = "America/Los_Angeles"
+    indent       = "  "
 }
