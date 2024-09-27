@@ -30,12 +30,7 @@ import org.carlmontrobotics.subsystems.Shooter;
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
   private RobotContainer m_robotContainer;
-  /*
-   
-  private CANSparkMax motor = MotorControllerFactory.createSparkMax(1, MotorConfig.NEO_550);
-  private SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(.1, 985.6);
-  private SparkPIDController pidController = motor.getPIDController();
-   */
+  private int age = 17;
   @Override
   public void robotInit() {
     
